@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/assest/CSS/user_registration.css">
+  <title>Admin Registration</title>
+</head>
+<body>
+  <div class="container">
+    <div id="registration-form">
+      <h2>Admin Registration</h2>
+      <form id="admin-registration-form">
+        <label for="employee-username">Username:</label>
+        <input type="text" id="employee-username" required>
+
+        <label for="employee-password">Password:</label>
+        <input type="password" id="employee-password" required>
+
+        <label for="employee-role">Role:</label>
+        <select id="employee-role" required>
+          <option value="admin">Admin</option>
+          <option value="manager">Manager</option>
+          <option value="employee">Employee</option>
+        </select>
+
+        <button type="button" onclick="registerEmployee()">Register Employee</button>
+      </form>
+
+      <h2>Registered Users</h2>
+      <table id="registered-users-table">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Password</th>
+            <th>Role</th>
+            <th>Action</th>
+            <th>Edit</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Registered users will be displayed here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="user reg.js"></script>
+</body>
+</html>

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gadget Retailer</title>
+  <link rel="stylesheet" href="/assest/CSS/product manager.css">
+
+  <!-- Add link to jsPDF library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+</head>
+<body>
+  <div class="header">
+    <h1>HAG Corp.</h1>
+    <form action="/login(new).html">
+      <button onclick="return confirmLogout();">Logout</button>
+    </form>
+    <form action="/report.html">
+      <button onclick="return reportProduct()">Report</button>
+    </form>
+  </div>
+
+  <div class="container">
+    <div id="inventory">
+      <h2>Inventory Stocks</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Item ID</th>
+            <th>Item Name</th>
+            <th>Retailer Name</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Edit Stock</th>
+            <th>Remove Item</th>
+          </tr>
+        </thead>
+        <tbody id="inventory-table">
+          <!-- Inventory items will be displayed here -->
+        </tbody>
+      </table>
+      <form id="inventory-form">
+        <input type="text" id="item-name" placeholder="Item Name">
+        <input type="text" id="retailer-name" placeholder="Retailer Name">
+        <input type="number" id="item-price" placeholder="Price">
+        <input type="number" id="item-stock" placeholder="Stock">
+        <button type="button" onclick="addItemToInventory()">Add Item</button>
+      </form>
+      <!-- Add a button to clear the virtual database -->
+      <button onclick="clearVirtualDatabase()">Clear Database</button>
+    </div>
+
+    <div id="customers">
+      <h2>Customers</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Customer Name</th>
+            <th>Item Purchased</th>
+            <th>Quantity</th>
+          </tr>
+        </thead>
+        <tbody id="customer-table">
+          <!-- Customer purchases will be displayed here -->
+        </tbody>
+      </table>
+      <form id="customer-form">
+        <input type="text" id="customer-name" placeholder="Customer Name">
+        <select id="customer-item">
+          <!-- Inventory items will be dynamically populated here -->
+        </select>
+        <input type="number" id="customer-quantity" placeholder="Quantity">
+        <button type="button" onclick="addCustomerPurchase()">Add Purchase</button>
+      </form>
+    </div>
+  </div>
+
+
+  <script>
+    // JavaScript code for managing editable inventory and customer purchases
+    const inventoryTable = document.getElementById('inventory-table');
+    const customerTable = document.getElementById('customer-table');
+    const inventoryForm = document.getElementById('inventory-form');
+    const customerForm = document.getElementById('customer-form');
+
+    // Initialize inventory data from localStorage or set an empty array if not present
+    let inventoryData = JSON.parse(localStorage.getItem('inventory')) || [];
+
+    // Initialize customer purchases from localStorage or set an empty array if not present
+    let customerPurchases = JSON.parse(localStorage.getItem('customerPurchases')) || [];
+
+    // Function to add an item to the inventory
+    function addItemToInventory() {
+      const itemName = document.getElementById('item-name').value;
+      const retailerName = document.getElementById('retailer-name').value;
+      const itemPrice = parseFloat(document.getElementById('item-price').value);
+      const itemStock = parseInt(document.getElementById('item-stock').value);
+
+      if (itemName && retailerName && !isNaN(itemPrice) && !isNaN(itemStock)) {
+        const newItem = { id: generateItemId(), name: itemName, retailer: retailerName, price: itemPrice, stock: itemStock };
+        inventoryData.push(newItem);
+        saveInventoryToLocalStorage();
+        displayInventory();
+        inventoryForm.reset();
+        populateCustomerItems();
+      } else {
+        alert('Please fill in all fields with valid values.');
+      }
+    }
+
+    // Function to remove an item from the inventory
+    function removeItemFromInventory(itemId) {
+      inventoryData = inventoryData.filter(item => item.id !== itemId);
+      saveInventoryToLocalStorage();
+      displayInventory();
+      populateCustomerItems();
+    }
+
+    // Function to update the stock of an existing item in the inventory
+    function updateItemStock(itemId, newStockValue) {
+      const itemToUpdate = inventoryData.find(item => item.id === itemId);
+      if (itemToUpdate) {
+        itemToUpdate.stock = newStockValue;
+        saveInventoryToLocalStorage();
+        displayInventory();
+      }
+    }
+
+    // Function to clear the virtual database
+    function clearVirtualDatabase() {
+      localStorage.clear();
+      inventoryData = [];
+      customerPurchases = [];
+      displayInventory();
+      displayCustomerPurchases();
+    }
+
+    // Function to save inventory data to localStorage
+    function saveInventoryToLocalStorage() {
+      localStorage.setItem('inventory', JSON.stringify(inventoryData));
+    }
+
+    // Function to save customer purchases to localStorage
+    function saveCustomerPurchasesToLocalStorage() {
+      localStorage.setItem('customerPurchases', JSON.stringify(customerPurchases));
+    }
+
+    // Function to display the inventory
+    function displayInventory() {
+      inventoryTable.innerHTML = '';
+      inventoryData.forEach(item => {
+        const row = document.createElement('tr');
+        const itemId = document.createElement('td');
+        const itemName = document.createElement('td');
+        const retailerName = document.createElement('td');
+        const itemPrice = document.createElement('td');
+        const itemStock = document.createElement('td');
+        const updateStockButton = document.createElement('td');
+        const removeItemButton = document.createElement('td');
+
+        itemId.textContent = item.id;
+        itemName.textContent = item.name;
+        retailerName.textContent = item.retailer;
+        itemPrice.textContent = `$${item.price}`;
+        itemStock.textContent = item.stock;
+
+        const stockInput = document.createElement('input');
+        stockInput.type = 'number';
+        stockInput.value = item.stock;
+        stockInput.addEventListener('change', (event) => {
+          updateItemStock(item.id, parseInt(event.target.value));
+        });
+        updateStockButton.appendChild(stockInput);
+
+        removeItemButton.innerHTML = `<button onclick="removeItemFromInventory(${item.id})">Remove</button>`;
+
+        row.appendChild(itemId);
+        row.appendChild(itemName);
+        row.appendChild(retailerName);
+        row.appendChild(itemPrice);
+        row.appendChild(itemStock);
+        row.appendChild(updateStockButton);
+        row.appendChild(removeItemButton);
+        inventoryTable.appendChild(row);
+      });
+    }
+
+    // Function to generate a unique item ID
+    function generateItemId() {
+      return inventoryData.length > 0 ? Math.max(...inventoryData.map(item => item.id)) + 1 : 1;
+    }
+
+    // Function to populate customer item dropdown
+    function populateCustomerItems() {
+      const customerItemSelect = document.getElementById('customer-item');
+      customerItemSelect.innerHTML = '';
+      inventoryData.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item.id;
+        option.textContent = item.name;
+        customerItemSelect.appendChild(option);
+      });
+    }
+
+    // Function to add a customer purchase
+    function addCustomerPurchase() {
+      const customerName = document.getElementById('customer-name').value;
+      const itemId = parseInt(document.getElementById('customer-item').value);
+      const quantity = parseInt(document.getElementById('customer-quantity').value);
+
+      if (customerName && !isNaN(itemId) && !isNaN(quantity)) {
+        const purchasedItem = inventoryData.find(item => item.id === itemId);
+        if (purchasedItem) {
+          if (purchasedItem.stock >= quantity) {
+            const purchase = { customerName, itemId, quantity };
+            customerPurchases.push(purchase);
+            // Update inventory stock
+            purchasedItem.stock -= quantity;
+            saveInventoryToLocalStorage();
+            displayInventory();
+            displayCustomerPurchases();
+            saveCustomerPurchasesToLocalStorage();
+            customerForm.reset();
+          } else {
+            alert('Not enough stock available for the purchase.');
+          }
+        } else {
+          alert('Item not found with the given ID.');
+        }
+      } else {
+        alert('Please fill in all fields with valid values.');
+      }
+    }
+
+    // Function to display customer purchases
+    function displayCustomerPurchases() {
+      customerTable.innerHTML = '';
+      customerPurchases.forEach(purchase => {
+        const customer = document.createElement('tr');
+        const customerName = document.createElement('td');
+        const itemName = document.createElement('td');
+        const quantity = document.createElement('td');
+
+        customerName.textContent = purchase.customerName;
+        const purchasedItem = inventoryData.find(item => item.id === purchase.itemId);
+        itemName.textContent = purchasedItem ? purchasedItem.name : 'Item not found';
+        quantity.textContent = purchase.quantity;
+
+        customer.appendChild(customerName);
+        customer.appendChild(itemName);
+        customer.appendChild(quantity);
+        customerTable.appendChild(customer);
+      });
+    }
+
+    displayInventory();
+    populateCustomerItems();
+    displayCustomerPurchases();
+
+    function confirmLogout() {
+          var confirmLogout = confirm("Are you sure you want to logout?");
+          return confirmLogout;
+    }
+
+    function reportProduct(){
+      var report = confirm("Are you sure you want to report this product?");
+      return report;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Manager Page</title>
+    <link rel="stylesheet" href="/assest/CSS/style.css">
+    <!-- Font Awsome -->
+    <script src="https://kit.fontawesome.com/646c5ebe80.js" crossorigin="anonymous"></script>
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Concert+One&family=Inter:wght@600&family=Josefin+Sans:wght@300&family=Oswald&family=Poppins&family=Roboto+Condensed:wght@700&family=Rubik+Iso&display=swap" rel="stylesheet">
+    <!-- Script link for charts -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Side Navigator -->
+        <div class="sidenav">
+            <h1>HAG Corp.</h1>        
+            <ul>
+                <li><a href="#home"><i class="fa-solid fa-user"></i><span> Home</span></a></li>
+                <li><a href="#purchase"><i class="fa-solid fa-cart-shopping"></i><span> Purchase</span></a></li>
+                <li><a href="/login(new).html" onclick="return confirmLogout();"><i class="fa-solid fa-right-from-bracket"></i><span> Logout</span></a></li>
+            </ul>
+        </div>
+        <!-- Main Content -->
+        <div class="main-content">
+            <section id="home">
+                <div>
+                    <div class="section">
+                        <div class="stock">
+                            <img src="/assest/img/ready-stock.png" alt="" srcset="">
+                        </div>
+                        <div class="stock">
+                            <h3>Total Stock</h3>
+                            <p>500</p>
+                        </div>
+                    </div>
+                    <div class="section">
+                        <div class="sale">
+                            <img src="/assest/img/sales.png" alt="" srcset="">
+                        </div>
+                        <div class="sale">
+                            <h3>Sales Returns</h3>
+                            <p>-₹7580</p>
+                        </div>
+                    </div>
+                    <div class="section">
+                        <div class="purchase">
+                            <img src="/assest/img/add-to-cart.png" alt="" srcset="">
+                        </div>
+                        <div class="purchase">
+                            <h3>Purchase Returns</h3>
+                            <p>-₹4690</p>
+                        </div>
+                    </div>
+                    <!-- <div class="charts">
+                        <div class="pie">
+                            <h3>Overall Report Piechart</h3>
+                            <div id="piechart" style="width: 500px; height: 500px;"></div>
+                        </div>
+                        <div class="line">
+                            <h3>Profit & Loss Overview</h3>
+                            <div id="curve_chart" style="width: 500px; height: auto"></div>
+                        </div>
+                    </div> -->
+                </div>
+                <div class="table">
+                    <h2 style="font-weight: bold;">Top Selling Products</h2>
+                    <table>
+                        <tr class="head">
+                            <th>SL</th>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Laptop</td>
+                            <td>27</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Mouse</td>
+                            <td>25</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Smart Phone</td>
+                            <td>21</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Monitor</td>
+                            <td>19</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>keyboard</td>
+                            <td>17</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>Printer</td>
+                            <td>17</td>
+                        </tr>
+                    </table>
+                    <h2 style="font-weight: bold;">Top Supliers</h2>
+                    <table>
+                        <tr class="head">
+                            <th>SL</th>
+                            <th>Supplier Name</th>
+                            <th>Amount</th>
+                        </tr>
+                        <tr>
+                            <td>01</td>
+                            <td>Steve Smith</td>
+                            <td>800</td>
+                        </tr>
+                        <tr>
+                            <td>02</td>
+                            <td>Jhon Doe</td>
+                            <td>970</td>
+                        </tr>
+                        <tr>
+                            <td>03</td>
+                            <td>David Warner</td>
+                            <td>820</td>
+                        </tr>
+                        <tr>
+                            <td>04</td>
+                            <td>Shane Watson</td>
+                            <td>1010</td>
+                        </tr>
+                        <tr>
+                            <td>05</td>
+                            <td>Mitchel Stark</td>
+                            <td>780</td>
+                        </tr>
+                        <tr>
+                            <td>06</td>
+                            <td>Jhon Sena</td>
+                            <td>960</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <section id="purchase">
+                <div class="container">
+                    <h1>Purchace Log</h1>
+                    <table id="inventoryTable">
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Quantity</th>
+                                <th>Supplier</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <button id="addProduct">Add Purchase</button>
+                </div>
+                <div id="modal" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h2>Add Product</h2>
+                        <form id="productForm">
+                            <label for="productName">Product Name:</label>
+                            <input type="text" id="productName" required>
+                            <label for="quantity">Quantity:</label>
+                            <input type="number" id="quantity" required>
+                            <label for="supplier">Supplier:</label>
+                            <input type="text" id="supplier" required>
+                            <button type="submit">Save</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <script src="/assest/JS/pie.js"></script>
+    <script src="/assest/JS/line.js"></script>
+    <script src="/assest/JS/updateproduct.js"></script>
+    <script src="/assest/JS/Salesdetails.js"></script>
+    <script src="/assest/JS/purchase.js"></script>
+    <script>
+        function confirmLogout() {
+          var confirmLogout = confirm("Are you sure you want to logout?");
+          return confirmLogout;
+        }
+    </script>
+</body>
+</html>

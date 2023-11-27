@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/assest/CSS/report.css">
+    <title>Employee Report</title>
+</head>
+<body>
+    <div class="container">
+        <h2>Employee Report</h2>
+        <form id="reportForm">
+            <label for="itemName">Item Name:</label>
+            <input type="text" id="itemName" name="itemName" required>
+
+            <label for="itemID">Item ID:</label>
+            <input type="text" id="itemID" name="itemID" required>
+
+            <label for="numStocksDamaged">Number of Stocks Damaged:</label>
+            <input type="number" id="numStocksDamaged" name="numStocksDamaged" required>
+
+            <button type="button" onclick="submitReport()">Submit Report</button>
+        </form>
+    </div>
+
+    <script src="report.js"></script>
+</body>
+</html>
